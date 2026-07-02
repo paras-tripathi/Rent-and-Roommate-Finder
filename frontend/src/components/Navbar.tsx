@@ -1,13 +1,13 @@
 import React from 'react';
-import { Home, Trophy, Info, Moon, Sun, LogOut } from 'lucide-react';
+import { Home, Trophy, Moon, Sun, LogOut } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 interface NavbarProps {
-  currentView: string;
-  onNavigate: (view: string) => void;
+  currentView?: string;
+  onNavigate?: (view: string) => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
+const Navbar: React.FC<NavbarProps> = ({ currentView = 'list', onNavigate = () => {} }) => {
   const [darkMode, setDarkMode] = React.useState(true);
   const { user, logout } = useAuth();
 

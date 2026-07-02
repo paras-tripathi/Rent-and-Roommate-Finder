@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Search, SlidersHorizontal, MessageCircle, Clock, CheckCircle, XCircle,
+  MessageCircle, Clock, CheckCircle, XCircle,
   User, Home, Zap, Send, IndianRupee, MapPin, Calendar,
 } from 'lucide-react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { listingsAPI, interestsAPI, profilesAPI } from '../../lib/api';
 import { useAuth } from '../../contexts/AuthContext';
 import Navbar from '../../components/Navbar';

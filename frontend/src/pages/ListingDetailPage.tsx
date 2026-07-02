@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { MapPin, IndianRupee, Calendar, Sofa, ChevronLeft, Send, CheckCircle } from 'lucide-react';
+import { MapPin, IndianRupee, ChevronLeft, Send, CheckCircle } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { listingsAPI, compatibilityAPI, interestsAPI } from '../lib/api';
 import { useAuth } from '../contexts/AuthContext';

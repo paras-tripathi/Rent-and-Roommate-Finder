@@ -68,7 +68,7 @@ export default function RegisterPage() {
               >
                 <Icon size={22} />
                 <div className="text-center">
-                  <p className="font-semibold text-sm">{role === 'TENANT' ? 'Tenant' : 'Owner'}</p>
+                  <p className="font-semibold text-sm">{label}</p>
                   <p className="text-xs text-dark-500 dark:text-dark-400">{sublabel}</p>
                 </div>
               </button>

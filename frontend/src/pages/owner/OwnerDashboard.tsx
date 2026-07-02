@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Home, Plus, Edit2, Trash2, CheckCircle, Users, LayoutGrid,
-  MessageCircle, Eye, MoreVertical, IndianRupee, MapPin, Calendar,
+  MessageCircle, Eye, IndianRupee, MapPin,
 } from 'lucide-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { listingsAPI, interestsAPI, profilesAPI } from '../../lib/api';
@@ -81,15 +81,9 @@ export default function OwnerDashboard() {
     enabled: !!user,
   });
 
-  const { data: ownerProfile } = useQuery({
-    queryKey: ['ownerProfile'],
-    queryFn: () => profilesAPI.saveOwner({ phone: '', bio: '' }).then(r => r.data).catch(() => null),
-    enabled: false,
-  });
-
   const listings: Listing[] = myListings || [];
   const interests: Interest[] = listings.flatMap(l =>
-    (l.interests || []).map(i => ({
+    (l.interests || []).map((i: any) => ({
       ...i,
       listing: { id: l.id, title: l.title, location: l.location, rent: l.rent }
     }))

@@ -55,6 +55,7 @@ export interface Listing {
   images: ListingImage[];
   _count?: { interests: number };
   compatibilityScore?: number;
+  interests?: any[];
   createdAt: string;
 }
 
