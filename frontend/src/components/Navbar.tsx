@@ -41,7 +41,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
     <nav className="glassmorphism sticky top-0 z-50 px-6 py-4 flex items-center justify-between border-b border-white/10 dark:border-gray-800/50 backdrop-blur-md bg-white/70 dark:bg-slate-900/80 transition-all duration-300">
       <div 
         className="flex items-center gap-3 cursor-pointer" 
-        onClick={handleHomeClick}
+        onClick={() => navigate('/')}
       >
         <div className="p-2 bg-gradient-to-tr from-indigo-500 to-pink-500 rounded-lg text-white shadow-lg shadow-indigo-500/30 animate-pulse">
           <Building2 className="h-6 w-6" />
