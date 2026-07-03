@@ -8,7 +8,16 @@ async function sendBrevoEmail(to: string, subject: string, htmlContent: string):
     return;
   }
 
-  const senderEmail = process.env.EMAIL_USER || 'noreply@rentflatmate.com';
+  let senderEmail = 'coder5238@gmail.com';
+  const emailFrom = process.env.EMAIL_FROM;
+  if (emailFrom) {
+    const match = emailFrom.match(/<(.+?)>/);
+    if (match && match[1]) {
+      senderEmail = match[1];
+    } else if (emailFrom.includes('@')) {
+      senderEmail = emailFrom.trim();
+    }
+  }
   const senderName = 'Rent & Flatmate Finder';
 
   const body = JSON.stringify({
