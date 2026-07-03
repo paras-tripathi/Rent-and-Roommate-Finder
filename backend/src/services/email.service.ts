@@ -1,23 +1,57 @@
-import nodemailer from 'nodemailer';
+import https from 'https';
 
-const createTransporter = () => {
-  if (!process.env.EMAIL_HOST || !process.env.EMAIL_USER || process.env.EMAIL_USER === 'your@gmail.com') {
-    return null;
+// Send email via Brevo HTTP API (bypasses Render's SMTP port blocking)
+async function sendBrevoEmail(to: string, subject: string, htmlContent: string): Promise<void> {
+  const apiKey = process.env.BREVO_API_KEY;
+  if (!apiKey) {
+    console.log('BREVO_API_KEY not configured, skipping email');
+    return;
   }
-  const port = Number(process.env.EMAIL_PORT) || 465;
-  return nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port,
-    secure: port === 465, // true for 465 (SSL), false for 587 (STARTTLS)
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-    connectionTimeout: 10000, // 10 seconds
-    greetingTimeout: 10000,
-    socketTimeout: 15000,
+
+  const senderEmail = process.env.EMAIL_USER || 'noreply@rentflatmate.com';
+  const senderName = 'Rent & Flatmate Finder';
+
+  const body = JSON.stringify({
+    sender: { name: senderName, email: senderEmail },
+    to: [{ email: to }],
+    subject,
+    htmlContent,
   });
-};
+
+  return new Promise((resolve, reject) => {
+    const req = https.request(
+      {
+        hostname: 'api.brevo.com',
+        path: '/v3/smtp/email',
+        method: 'POST',
+        headers: {
+          'api-key': apiKey,
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(body),
+        },
+      },
+      (res) => {
+        let data = '';
+        res.on('data', (chunk) => (data += chunk));
+        res.on('end', () => {
+          if (res.statusCode && res.statusCode >= 200 && res.statusCode < 300) {
+            console.log(`✅ Email sent to ${to}`);
+            resolve();
+          } else {
+            console.error(`❌ Brevo API error ${res.statusCode}:`, data);
+            reject(new Error(`Brevo API error: ${res.statusCode} - ${data}`));
+          }
+        });
+      }
+    );
+    req.on('error', (err) => {
+      console.error('❌ Email request error:', err);
+      reject(err);
+    });
+    req.write(body);
+    req.end();
+  });
+}
 
 export async function sendInterestNotificationToOwner(
   ownerEmail: string,
@@ -26,17 +60,11 @@ export async function sendInterestNotificationToOwner(
   listingTitle: string,
   compatibilityScore: number
 ): Promise<void> {
-  const transporter = createTransporter();
-  if (!transporter) {
-    console.log('Email not configured, skipping notification');
-    return;
-  }
   try {
-    await transporter.sendMail({
-      from: process.env.EMAIL_FROM || 'Rent & Flatmate Finder <noreply@rentflatmate.com>',
-      to: ownerEmail,
-      subject: `🏠 New Interest: ${tenantName} is interested in "${listingTitle}"`,
-      html: `
+    await sendBrevoEmail(
+      ownerEmail,
+      `🏠 New Interest: ${tenantName} is interested in "${listingTitle}"`,
+      `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #6366f1;">New Interest Received!</h2>
           <p>Hi ${ownerName},</p>
@@ -47,10 +75,10 @@ export async function sendInterestNotificationToOwner(
           <p>Log in to your dashboard to accept or decline this interest.</p>
           <a href="${process.env.FRONTEND_URL}/dashboard/owner" style="background: #6366f1; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; display: inline-block;">View Dashboard</a>
         </div>
-      `,
-    });
+      `
+    );
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error('Error sending owner notification email:', error);
   }
 }
 
@@ -60,14 +88,11 @@ export async function sendInterestAcceptedToTenant(
   listingTitle: string,
   ownerName: string
 ): Promise<void> {
-  const transporter = createTransporter();
-  if (!transporter) return;
   try {
-    await transporter.sendMail({
-      from: process.env.EMAIL_FROM || 'Rent & Flatmate Finder <noreply@rentflatmate.com>',
-      to: tenantEmail,
-      subject: `✅ Your interest in "${listingTitle}" was accepted!`,
-      html: `
+    await sendBrevoEmail(
+      tenantEmail,
+      `✅ Your interest in "${listingTitle}" was accepted!`,
+      `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #10b981;">Great News! 🎉</h2>
           <p>Hi ${tenantName},</p>
@@ -75,10 +100,10 @@ export async function sendInterestAcceptedToTenant(
           <p>You can now start chatting with the owner directly through the platform!</p>
           <a href="${process.env.FRONTEND_URL}/dashboard/tenant" style="background: #10b981; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; display: inline-block;">Open Chat</a>
         </div>
-      `,
-    });
+      `
+    );
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error('Error sending acceptance email:', error);
   }
 }
 
@@ -87,14 +112,11 @@ export async function sendInterestDeclinedToTenant(
   tenantName: string,
   listingTitle: string
 ): Promise<void> {
-  const transporter = createTransporter();
-  if (!transporter) return;
   try {
-    await transporter.sendMail({
-      from: process.env.EMAIL_FROM || 'Rent & Flatmate Finder <noreply@rentflatmate.com>',
-      to: tenantEmail,
-      subject: `Your interest in "${listingTitle}" was not accepted`,
-      html: `
+    await sendBrevoEmail(
+      tenantEmail,
+      `Your interest in "${listingTitle}" was not accepted`,
+      `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #6b7280;">Interest Update</h2>
           <p>Hi ${tenantName},</p>
@@ -102,9 +124,9 @@ export async function sendInterestDeclinedToTenant(
           <p>Don't be discouraged — there are many other great listings waiting for you!</p>
           <a href="${process.env.FRONTEND_URL}/dashboard/tenant" style="background: #6366f1; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; display: inline-block;">Browse Listings</a>
         </div>
-      `,
-    });
+      `
+    );
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error('Error sending declined email:', error);
   }
 }
