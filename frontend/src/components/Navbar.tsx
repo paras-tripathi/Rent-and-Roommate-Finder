@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Trophy, Moon, Sun, LogOut } from 'lucide-react';
+import { Home, Building2, Moon, Sun, LogOut } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 interface NavbarProps {
@@ -26,7 +26,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView = 'list', onNavigate = () =
         onClick={() => onNavigate('list')}
       >
         <div className="p-2 bg-gradient-to-tr from-indigo-500 to-pink-500 rounded-lg text-white shadow-lg shadow-indigo-500/30 animate-pulse">
-          <Trophy className="h-6 w-6" />
+          <Building2 className="h-6 w-6" />
         </div>
         <span className="font-extrabold text-2xl bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 dark:from-indigo-400 dark:via-purple-400 dark:to-pink-400 drop-shadow-sm font-sans">
           Rent & Flatmate Finder
