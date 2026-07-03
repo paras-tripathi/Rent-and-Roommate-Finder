@@ -58,16 +58,16 @@ export const sendInterest = async (req: AuthRequest, res: Response): Promise<voi
       if (compat) score = compat.score;
     }
 
-    // Send email to owner
+    // Send email to owner (non-blocking)
     const owner = listing.owner as any;
     if (owner) {
-      await sendInterestNotificationToOwner(
+      sendInterestNotificationToOwner(
         owner.email,
         owner.name,
         req.user!.name,
         listing.title,
         score
-      );
+      ).catch((err) => console.error('Background sendInterestNotificationToOwner error:', err));
     }
 
     // Create in-app notification for owner
@@ -147,12 +147,12 @@ export const respondToInterest = async (req: AuthRequest, res: Response): Promis
       });
 
       if (tenant) {
-        await sendInterestAcceptedToTenant(
+        sendInterestAcceptedToTenant(
           tenant.email,
           tenant.name,
           listing.title,
           req.user!.name
-        );
+        ).catch((err) => console.error('Background sendInterestAcceptedToTenant error:', err));
       }
 
       res.json({ ...updated?.toJSON(), chatRoomId: chatRoom._id.toString() });
@@ -168,11 +168,11 @@ export const respondToInterest = async (req: AuthRequest, res: Response): Promis
       io?.to(`user:${interest.tenantId}`).emit('notification:new', notification);
 
       if (tenant) {
-        await sendInterestDeclinedToTenant(
+        sendInterestDeclinedToTenant(
           tenant.email,
           tenant.name,
           listing.title
-        );
+        ).catch((err) => console.error('Background sendInterestDeclinedToTenant error:', err));
       }
 
       res.json(updated);
