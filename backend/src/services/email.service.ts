@@ -15,7 +15,8 @@ const createTransporter = () => {
     tls: {
       rejectUnauthorized: false,
     },
-  });
+    family: 4, // Force IPv4 to bypass Render IPv6 outbound route limitation
+  } as any);
 };
 
 export async function sendInterestNotificationToOwner(
