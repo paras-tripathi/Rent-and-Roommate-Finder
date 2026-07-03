@@ -5,6 +5,7 @@ import {
   TrendingUp, Cpu, Sparkles, ShieldCheck, CheckCircle
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
+import { useAuth } from '../contexts/AuthContext';
 
 const features = [
   {
@@ -54,6 +55,7 @@ const stats = [
 
 
 export default function LandingPage() {
+  const { user } = useAuth();
 
 
   const containerVariants = {
@@ -122,18 +124,35 @@ export default function LandingPage() {
               variants={itemVariants}
               className="flex flex-col sm:flex-row gap-4 justify-center items-center"
             >
-              <Link 
-                to="/register" 
-                className="btn-primary bg-gradient-to-r from-indigo-500 to-pink-600 hover:from-indigo-600 hover:to-pink-700 text-white font-bold text-base px-8 py-4 rounded-xl flex items-center gap-2 shadow-lg shadow-indigo-500/20 glow-btn w-full sm:w-auto"
-              >
-                Launch App Free <ArrowRight size={18} />
-              </Link>
-              <Link 
-                to="/login" 
-                className="btn-secondary bg-slate-900/60 border border-slate-850 hover:bg-slate-900 text-white font-bold text-base px-8 py-4 rounded-xl transition-all w-full sm:w-auto backdrop-blur-sm"
-              >
-                Access Dashboard
-              </Link>
+              {user ? (
+                <Link 
+                  to={
+                    user.role === 'TENANT' 
+                      ? '/dashboard/tenant' 
+                      : user.role === 'OWNER' 
+                      ? '/dashboard/owner' 
+                      : '/dashboard/admin'
+                  }
+                  className="btn-primary bg-gradient-to-r from-indigo-500 to-pink-650 hover:from-indigo-650 hover:to-pink-700 text-white font-bold text-base px-8 py-4 rounded-xl flex items-center gap-2 shadow-lg shadow-indigo-500/20 glow-btn w-full sm:w-auto text-center justify-center"
+                >
+                  Access Dashboard <ArrowRight size={18} />
+                </Link>
+              ) : (
+                <>
+                  <Link 
+                    to="/register" 
+                    className="btn-primary bg-gradient-to-r from-indigo-500 to-pink-600 hover:from-indigo-600 hover:to-pink-700 text-white font-bold text-base px-8 py-4 rounded-xl flex items-center gap-2 shadow-lg shadow-indigo-500/20 glow-btn w-full sm:w-auto text-center justify-center"
+                  >
+                    Launch App Free <ArrowRight size={18} />
+                  </Link>
+                  <Link 
+                    to="/login" 
+                    className="btn-secondary bg-slate-900/60 border border-slate-850 hover:bg-slate-900 text-white font-bold text-base px-8 py-4 rounded-xl transition-all w-full sm:w-auto backdrop-blur-sm text-center justify-center"
+                  >
+                    Sign In
+                  </Link>
+                </>
+              )}
             </motion.div>
           </motion.div>
         </div>
@@ -212,18 +231,35 @@ export default function LandingPage() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Link 
-                to="/register" 
-                className="bg-white text-slate-950 font-bold px-8 py-4 rounded-xl hover:bg-slate-100 transition-all inline-flex items-center gap-2 justify-center shadow-lg w-full sm:w-auto text-sm uppercase tracking-wider"
-              >
-                Get Started Now <ArrowRight size={16} />
-              </Link>
-              <Link 
-                to="/login" 
-                className="border border-slate-800 text-white hover:bg-slate-900/50 font-bold px-8 py-4 rounded-xl transition-all inline-flex items-center justify-center w-full sm:w-auto text-sm uppercase tracking-wider"
-              >
-                Sign In
-              </Link>
+              {user ? (
+                <Link 
+                  to={
+                    user.role === 'TENANT' 
+                      ? '/dashboard/tenant' 
+                      : user.role === 'OWNER' 
+                      ? '/dashboard/owner' 
+                      : '/dashboard/admin'
+                  }
+                  className="bg-white text-slate-950 font-bold px-8 py-4 rounded-xl hover:bg-slate-100 transition-all inline-flex items-center gap-2 justify-center shadow-lg w-full sm:w-auto text-sm uppercase tracking-wider"
+                >
+                  Access Dashboard <ArrowRight size={16} />
+                </Link>
+              ) : (
+                <>
+                  <Link 
+                    to="/register" 
+                    className="bg-white text-slate-950 font-bold px-8 py-4 rounded-xl hover:bg-slate-100 transition-all inline-flex items-center gap-2 justify-center shadow-lg w-full sm:w-auto text-sm uppercase tracking-wider"
+                  >
+                    Get Started Now <ArrowRight size={16} />
+                  </Link>
+                  <Link 
+                    to="/login" 
+                    className="border border-slate-800 text-white hover:bg-slate-900/50 font-bold px-8 py-4 rounded-xl transition-all inline-flex items-center justify-center w-full sm:w-auto text-sm uppercase tracking-wider"
+                  >
+                    Sign In
+                  </Link>
+                </>
+              )}
             </div>
             
             <div className="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
