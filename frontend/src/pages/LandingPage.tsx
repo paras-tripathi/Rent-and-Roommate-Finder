@@ -85,7 +85,7 @@ const sampleRooms = [
 ];
 
 export default function LandingPage() {
-  // Antigravity Terminal Simulation States
+  // Match Terminal Simulation States
   const [targetBudget, setTargetBudget] = useState<number>(18000);
   const [targetLocation, setTargetLocation] = useState<string>('Bangalore');
   const [selectedRoomIdx, setSelectedRoomIdx] = useState<number>(1);
@@ -99,7 +99,7 @@ export default function LandingPage() {
     setShowResultCard(false);
 
     const logs = [
-      `[system] Initializing Antigravity Match Agent v2.5...`,
+      `[system] Initializing Smart Match Agent v2.5...`,
       `[criteria] Loading user inputs (Budget Target: ₹${targetBudget.toLocaleString()}, Location: ${targetLocation})...`,
       `[mongodb] Querying active clusters for properties matching criteria...`,
       `[mongodb] Found 3 properties in active namespace.`,
@@ -144,7 +144,7 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="relative overflow-hidden pt-20 pb-32">
-        {/* Antigravity Blurry Glows */}
+        {/* Ambient Blurry Glows */}
         <div className="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none" />
         <div className="absolute bottom-[10%] right-[10%] w-[450px] h-[450px] bg-pink-500/10 rounded-full blur-[130px] animate-pulse pointer-events-none" />
 
@@ -161,7 +161,7 @@ export default function LandingPage() {
               className="inline-flex items-center gap-2 bg-slate-900 border border-slate-800 text-indigo-400 rounded-full px-4 py-1.5 text-xs sm:text-sm font-semibold mb-8 shadow-2xl backdrop-blur-md"
             >
               <Sparkles size={14} className="text-pink-500 animate-pulse" />
-              <span>Google Antigravity Premium Template</span>
+              <span>AI-Powered Flatmate Matchmaker</span>
             </motion.div>
 
             {/* Main Title */}
@@ -205,7 +205,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Interactive Agentic Simulator (Antigravity IDE Replica Widget) */}
+      {/* Interactive Agentic Simulator (AI Console Widget) */}
       <section className="py-20 border-y border-slate-900 bg-slate-950/50 relative">
         {/* Decorative Grid Line */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[1px] bg-gradient-to-r from-transparent via-slate-800 to-transparent" />
@@ -320,7 +320,7 @@ export default function LandingPage() {
               </button>
             </div>
 
-            {/* Antigravity Console logs panel */}
+            {/* AI Console logs panel */}
             <div className="lg:col-span-7 flex flex-col bg-slate-950 border border-slate-900 rounded-2xl overflow-hidden shadow-2xl relative">
               {/* Terminal Header */}
               <div className="bg-slate-900 px-4 py-3 border-b border-slate-950 flex items-center justify-between">
@@ -330,7 +330,7 @@ export default function LandingPage() {
                     <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80 inline-block" />
                     <span className="w-2.5 h-2.5 rounded-full bg-green-500/80 inline-block" />
                   </div>
-                  <span className="text-[10px] uppercase font-bold tracking-widest text-slate-500 ml-2">antigravity-agent-console</span>
+                  <span className="text-[10px] uppercase font-bold tracking-widest text-slate-500 ml-2">match-agent-console</span>
                 </div>
                 <Code2 size={13} className="text-slate-600" />
               </div>
@@ -513,7 +513,7 @@ export default function LandingPage() {
               Rent & Flatmate Finder
             </span>
           </div>
-          <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider">© 2026 Rent & Flatmate Finder. Built with Google Antigravity.</p>
+          <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider">© 2026 Rent & Flatmate Finder. All rights reserved.</p>
           <div className="flex gap-6">
             <a href="#" className="text-slate-500 hover:text-indigo-400 text-xs font-semibold uppercase tracking-wider transition-colors">Privacy</a>
             <a href="#" className="text-slate-500 hover:text-indigo-400 text-xs font-semibold uppercase tracking-wider transition-colors">Terms</a>
