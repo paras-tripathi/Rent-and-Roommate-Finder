@@ -139,6 +139,16 @@ export default function OwnerDashboard() {
     }
   };
 
+  const handleMarkActive = async (id: string) => {
+    try {
+      await listingsAPI.markActive(id);
+      toast.success('Listing marked as active!');
+      queryClient.invalidateQueries({ queryKey: ['ownerListings'] });
+    } catch {
+      toast.error('Failed to update listing');
+    }
+  };
+
   const handleRespondInterest = async (id: string, status: 'ACCEPTED' | 'DECLINED') => {
     try {
       await interestsAPI.respond(id, status);
@@ -433,9 +443,13 @@ export default function OwnerDashboard() {
                             <button onClick={() => handleEditListing(listing)} className="btn-ghost py-2 px-4 text-xs font-semibold flex items-center gap-1">
                               <Edit2 size={13} /> Edit
                             </button>
-                            {listing.status === 'ACTIVE' && (
+                            {listing.status === 'ACTIVE' ? (
                               <button onClick={() => handleMarkFilled(listing.id)} className="btn-ghost py-2 px-4 text-xs font-semibold flex items-center gap-1 text-indigo-600 dark:text-indigo-400">
                                 <CheckCircle size={13} /> Mark as Filled
+                              </button>
+                            ) : (
+                              <button onClick={() => handleMarkActive(listing.id)} className="btn-ghost py-2 px-4 text-xs font-semibold flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
+                                <CheckCircle size={13} /> Mark as Active
                               </button>
                             )}
                             <button onClick={() => handleDelete(listing.id)} className="btn-ghost py-2 px-4 text-xs font-semibold flex items-center gap-1 text-red-500 hover:text-red-650 hover:bg-red-50 dark:hover:bg-red-950/20 ml-auto">

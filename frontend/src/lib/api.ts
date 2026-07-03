@@ -43,6 +43,7 @@ export const listingsAPI = {
   update: (id: string, data: any) => api.put(`/listings/${id}`, data),
   delete: (id: string) => api.delete(`/listings/${id}`),
   markFilled: (id: string) => api.patch(`/listings/${id}/fill`),
+  markActive: (id: string) => api.patch(`/listings/${id}/activate`),
 };
 
 // Profiles

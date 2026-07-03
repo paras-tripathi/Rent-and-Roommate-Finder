@@ -287,6 +287,30 @@ export const markFilled = async (req: AuthRequest, res: Response): Promise<void>
   }
 };
 
+export const markActive = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const listingId = req.params.id as string;
+    const listing = await Listing.findById(listingId);
+    if (!listing) {
+      res.status(404).json({ error: 'Listing not found' });
+      return;
+    }
+    if (listing.ownerId.toString() !== req.user!.id) {
+      res.status(403).json({ error: 'Not authorized' });
+      return;
+    }
+    const updated = await Listing.findByIdAndUpdate(
+      listingId,
+      { status: 'ACTIVE' },
+      { new: true }
+    );
+    res.json(updated);
+  } catch (error) {
+    console.error('Mark active error:', error);
+    res.status(500).json({ error: 'Failed to mark listing as active' });
+  }
+};
+
 export const getOwnerListings = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     // We want owner listings including interests with populated tenant details

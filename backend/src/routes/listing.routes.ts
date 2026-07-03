@@ -6,6 +6,7 @@ import {
   updateListing,
   deleteListing,
   markFilled,
+  markActive,
   getOwnerListings,
 } from '../controllers/listing.controller';
 import { authenticate } from '../middleware/auth.middleware';
@@ -24,5 +25,6 @@ router.post('/', authenticate, authorize('OWNER', 'ADMIN'), createListing);
 router.put('/:id', authenticate, authorize('OWNER', 'ADMIN'), updateListing);
 router.delete('/:id', authenticate, authorize('OWNER', 'ADMIN'), deleteListing);
 router.patch('/:id/fill', authenticate, authorize('OWNER'), markFilled);
+router.patch('/:id/activate', authenticate, authorize('OWNER'), markActive);
 
 export default router;
