@@ -4,17 +4,18 @@ const createTransporter = () => {
   if (!process.env.EMAIL_HOST || !process.env.EMAIL_USER || process.env.EMAIL_USER === 'your@gmail.com') {
     return null;
   }
+  const port = Number(process.env.EMAIL_PORT) || 465;
   return nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
-    port: Number(process.env.EMAIL_PORT) || 587,
-    secure: false,
+    port,
+    secure: port === 465, // true for 465 (SSL), false for 587 (STARTTLS)
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
-    tls: {
-      rejectUnauthorized: false,
-    },
+    connectionTimeout: 10000, // 10 seconds
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
   });
 };
 
