@@ -5,7 +5,10 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import { Server } from 'socket.io';
 import dotenv from 'dotenv';
+import dns from 'dns';
 import { initializeSocket } from './services/socket.service';
+
+dns.setDefaultResultOrder('ipv4first');
 import authRoutes from './routes/auth.routes';
 import listingRoutes from './routes/listing.routes';
 import profileRoutes from './routes/profile.routes';
