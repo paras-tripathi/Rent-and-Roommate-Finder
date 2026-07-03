@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Home, Eye, EyeOff, UserPlus, Building2, User } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import toast from 'react-hot-toast';
@@ -36,42 +37,55 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-violet-50 dark:from-dark-950 dark:via-dark-900 dark:to-dark-950 flex items-center justify-center p-4">
-      <div className="w-full max-w-md animate-fade-in">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50 dark:from-dark-950 dark:via-dark-900 dark:to-dark-950 flex items-center justify-center p-4 bg-grid-pattern">
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: 'spring', stiffness: 100, damping: 15 }}
+        className="w-full max-w-md"
+      >
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-violet-600 rounded-2xl flex items-center justify-center shadow-lg shadow-primary-500/25">
+            <motion.div 
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              whileTap={{ scale: 0.95 }}
+              className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/25"
+            >
               <Home size={22} className="text-white" />
-            </div>
+            </motion.div>
           </Link>
-          <h1 className="text-2xl font-bold">Create Account</h1>
-          <p className="text-dark-500 dark:text-dark-400 mt-1">Join thousands of users today</p>
+          <h1 className="text-3xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-pink-500 dark:from-indigo-400 dark:to-pink-400">
+            Create Account
+          </h1>
+          <p className="text-dark-500 dark:text-dark-400 mt-1.5 text-sm">Join thousands of users today</p>
         </div>
 
-        <div className="card p-8">
+        <div className="card p-8 bg-white dark:bg-dark-900 border border-dark-200 dark:border-dark-850 shadow-2xl relative overflow-hidden">
           {/* Role Selection */}
           <div className="grid grid-cols-2 gap-3 mb-6">
             {([
               ['TENANT', 'I need a room', User, 'Looking for a place to rent'],
               ['OWNER', 'I have a room', Building2, 'List your property'],
             ] as const).map(([role, label, Icon, sublabel]) => (
-              <button
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 key={role}
                 id={`role-${role.toLowerCase()}-btn`}
                 type="button"
                 onClick={() => setForm(f => ({ ...f, role }))}
                 className={`p-4 rounded-xl border-2 flex flex-col items-center gap-2 transition-all ${
                   form.role === role
-                    ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-400'
-                    : 'border-dark-200 dark:border-dark-700 hover:border-dark-300 dark:hover:border-dark-600 text-dark-600 dark:text-dark-400'
+                    ? 'border-indigo-500 bg-indigo-50/50 dark:bg-indigo-950/20 text-indigo-700 dark:text-indigo-400'
+                    : 'border-dark-200 dark:border-dark-750 hover:border-dark-300 dark:hover:border-dark-600 text-dark-600 dark:text-dark-400'
                 }`}
               >
-                <Icon size={22} />
+                <Icon size={22} className={form.role === role ? 'text-indigo-500' : 'text-dark-400'} />
                 <div className="text-center">
-                  <p className="font-semibold text-sm">{label}</p>
-                  <p className="text-xs text-dark-500 dark:text-dark-400">{sublabel}</p>
+                  <p className="font-bold text-sm">{label}</p>
+                  <p className="text-[10px] text-dark-500 dark:text-dark-400 mt-0.5">{sublabel}</p>
                 </div>
-              </button>
+              </motion.button>
             ))}
           </div>
 
@@ -115,7 +129,7 @@ export default function RegisterPage() {
                 <button
                   type="button"
                   onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-dark-400 hover:text-dark-600 transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-dark-400 hover:text-indigo-500 transition-colors"
                 >
                   {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -127,7 +141,7 @@ export default function RegisterPage() {
             <button
               id="register-submit-btn"
               type="submit"
-              className="btn-primary w-full flex items-center justify-center gap-2"
+              className="btn-primary w-full flex items-center justify-center gap-2 glow-btn bg-indigo-600 hover:bg-indigo-700 shadow-md shadow-indigo-600/10 mt-2"
               disabled={loading}
             >
               {loading ? (
@@ -142,13 +156,13 @@ export default function RegisterPage() {
           <div className="mt-6 text-center">
             <p className="text-sm text-dark-500">
               Already have an account?{' '}
-              <Link to="/login" className="text-primary-600 dark:text-primary-400 font-medium hover:underline">
+              <Link to="/login" className="text-indigo-600 dark:text-indigo-400 font-semibold hover:underline">
                 Sign in
               </Link>
             </p>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
