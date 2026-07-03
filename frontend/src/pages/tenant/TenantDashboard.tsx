@@ -129,7 +129,7 @@ export default function TenantDashboard() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-dark-950 transition-colors duration-300">
-      <Navbar />
+      <Navbar currentView={tab === 'browse' ? 'list' : tab} onNavigate={(view) => setTab(view === 'list' ? 'browse' : (view as any))} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header Block (Premium Mesh Banner) */}
