@@ -96,6 +96,24 @@ export default function TenantDashboard() {
     }
   };
 
+  const handleDeleteInterest = async (id: string, status: string) => {
+    const isPending = status === 'PENDING';
+    const confirmMessage = isPending 
+      ? "Are you sure you want to withdraw your interest request?" 
+      : "Are you sure you want to delete this request record? This will permanently close the chat room and allow you to express interest in this listing again.";
+    
+    if (!window.confirm(confirmMessage)) return;
+
+    try {
+      await interestsAPI.withdraw(id);
+      toast.success(isPending ? 'Interest request withdrawn!' : 'Request record deleted!');
+      queryClient.invalidateQueries({ queryKey: ['myInterests'] });
+      queryClient.invalidateQueries({ queryKey: ['listings'] });
+    } catch {
+      toast.error('Failed to update request');
+    }
+  };
+
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     setSavingProfile(true);
@@ -343,6 +361,12 @@ export default function TenantDashboard() {
                         <Link to={`/listings/${interest.listingId}`} className="btn-secondary py-2.5 px-5 text-sm font-semibold border border-dark-200 dark:border-dark-750">
                           View details
                         </Link>
+                        <button
+                          onClick={() => handleDeleteInterest(interest.id, interest.status)}
+                          className="btn-danger py-2.5 px-5 text-sm font-semibold border border-rose-500/20 bg-rose-500/5 hover:bg-rose-500/10 text-rose-600 dark:text-rose-450 rounded-xl transition-all"
+                        >
+                          {interest.status === 'PENDING' ? 'Withdraw' : 'Delete'}
+                        </button>
                       </div>
                     </div>
                   </div>

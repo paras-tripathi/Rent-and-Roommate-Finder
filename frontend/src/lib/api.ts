@@ -63,6 +63,8 @@ export const interestsAPI = {
   send: (data: any) => api.post('/interests', data),
   getMy: () => api.get('/interests/mine'),
   respond: (id: string, status: string) => api.patch(`/interests/${id}/respond`, { status }),
+  withdraw: (id: string) => api.delete(`/interests/${id}`),
+  delete: (id: string) => api.delete(`/interests/${id}`),
 };
 
 // Chat

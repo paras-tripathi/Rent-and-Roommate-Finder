@@ -210,24 +210,37 @@ export const getMyInterests = async (req: AuthRequest, res: Response): Promise<v
   }
 };
 
-export const withdrawInterest = async (req: AuthRequest, res: Response): Promise<void> => {
+export const deleteInterest = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const interest = await Interest.findById(req.params.id as string);
+    const interestId = req.params.id as string;
+    const interest = await Interest.findById(interestId).populate('listing');
     if (!interest) {
       res.status(404).json({ error: 'Interest not found' });
       return;
     }
-    if (interest.tenantId.toString() !== req.user!.id) {
+
+    const listing = interest.listing as any;
+    
+    // Check authorization:
+    // User must be either the tenant who sent the interest,
+    // or the owner of the listing who received the interest.
+    const isTenant = interest.tenantId.toString() === req.user!.id;
+    const isOwner = listing && listing.ownerId.toString() === req.user!.id;
+
+    if (!isTenant && !isOwner) {
       res.status(403).json({ error: 'Not authorized' });
       return;
     }
-    if (interest.status !== 'PENDING') {
-      res.status(400).json({ error: 'Cannot withdraw an already-responded interest' });
-      return;
-    }
-    await Interest.findByIdAndDelete(req.params.id as string);
-    res.json({ message: 'Interest withdrawn successfully' });
-  } catch {
-    res.status(500).json({ error: 'Failed to withdraw interest' });
+
+    // Delete associated chat room if exists
+    await ChatRoom.deleteOne({ interestId });
+
+    // Delete the interest request
+    await Interest.findByIdAndDelete(interestId);
+
+    res.json({ message: 'Interest deleted successfully' });
+  } catch (error) {
+    console.error('Delete interest error:', error);
+    res.status(500).json({ error: 'Failed to delete interest' });
   }
 };

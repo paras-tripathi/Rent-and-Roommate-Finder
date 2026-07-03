@@ -149,6 +149,17 @@ export default function OwnerDashboard() {
     }
   };
 
+  const handleDeleteInterest = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this interest request? This will permanently close the chat room and allow the tenant to request again.")) return;
+    try {
+      await interestsAPI.withdraw(id);
+      toast.success('Interest request deleted successfully!');
+      queryClient.invalidateQueries({ queryKey: ['ownerListings'] });
+    } catch {
+      toast.error('Failed to delete interest request');
+    }
+  };
+
   const handleRespondInterest = async (id: string, status: 'ACCEPTED' | 'DECLINED') => {
     try {
       await interestsAPI.respond(id, status);
@@ -537,6 +548,14 @@ export default function OwnerDashboard() {
                           >
                             <MessageCircle size={15} /> Open Live Chat
                           </Link>
+                        )}
+                        {interest.status !== 'PENDING' && (
+                          <button
+                            onClick={() => handleDeleteInterest(interest.id)}
+                            className="btn-danger py-2.5 px-5 text-sm font-semibold border border-rose-500/20 bg-rose-500/5 hover:bg-rose-500/10 text-rose-600 dark:text-rose-450 rounded-xl transition-all"
+                          >
+                            Delete Request
+                          </button>
                         )}
                       </div>
                     </div>
